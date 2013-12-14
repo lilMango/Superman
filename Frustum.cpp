@@ -50,7 +50,6 @@ void Frustum::setCamInternals(double angle, double ratio, double nearD, double f
   
   //compute width and height of near and far plane sections
   tang = (double) tan(ANG2RAD * angle *.5);
-  printf("HEYO: %3.4f\n");
   nh = nearD* tang;
   nw = nh * ratio;
   fh = farD * tang;

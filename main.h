@@ -13,6 +13,11 @@
 #include "SOIL.h"
 #include "Frustum.h"
 #include "MyWindow.h"
+#include "Particle.h"
+#include "SpringDamper.h"
+#include "AeroTriangle.h"
+#include "Cloth.h"
+
 void mouseClick(int,int,int,int);
 void mouseDrag(int,int);
 void drawObj();
@@ -44,7 +49,6 @@ float scaleFactor=1;
 int prevScaleDrag=0;//keep track of delta mouse drags
 bool isPaused=false;
 
-//ObjReader::readObj("teapot.obj", nVerts, &vertices, &normals, &texcoords, nIndices, &indices);
 float *colors;;//pointer to colors array
 bool isSpin=false;
 bool isAdjust=true;
@@ -58,20 +62,6 @@ Shader* tripShad, *waveShad, *inceptionShad;
 Light *pointLight = new Light(0, 10, 20,0,
 			      1,1,1,1);
 
-/*
-class Window	  // output window related routines
-{
-  public:
-    static int width, height; 	            // window size
-
-    static void idleCallback(void);
-    static void reshapeCallback(int, int);
-    static void displayCallback(void);
-    static void processNormalKeys(unsigned char,int,int);
-    static void processSpecialKeys(int,int,int);
-};
-
- */
 int Window::width=512;int Window::height=512;
 
 Frustum* frustum=new Frustum(100.0, Window::width/Window::height, 10.0, 1000);
@@ -136,7 +126,7 @@ void mouseDrag(int x, int y) {
   
   if(isDragging) { 
     if(isScaling){ 
-      //printf("isScaling\n"); 
+
       float diff=prevScaleDrag-y;//diff<0 scale down 
       //diff>0 scale up 
       //diff/100;//to lower sensitivity 
@@ -198,24 +188,14 @@ void drawPlane(){
   }//end forx
   
 }//end drawPlane()
-  
+
+Cloth* cape=new Cloth();  
 void drawCape(){
-  glColor3f(1,0,0);
-  
-  const float DIM=30.0f;
-  const float DELTA=DIM/100.0f;
-  glColor3f(1,0,0);
-  int offset=10;
-  for(float y=0; y<DIM-2; y+=DELTA){
-    glBegin(GL_TRIANGLE_STRIP);
-    for(float x=-10.0+y/4.0; x<10.0-y/4.0; x+=DELTA){
-      glNormal3f(0,-1,0);      
-      glVertex3f(x-offset,0,y);
-      glVertex3f(x-offset,0,y+DELTA);
-    }
-    glEnd();
-  }//end forx
-  
+  Matrix4 M=Matrix4(1,0,0,0,
+		    0,1,0,0,
+		    0,0,1,0,
+		    0,0,0,1);
+  cape->draw(M);
 }
 
  

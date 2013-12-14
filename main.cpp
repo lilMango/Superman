@@ -207,11 +207,11 @@ void Window::processNormalKeys(unsigned char key,int x,int y)
 		displayCallback();
 		Mobj2world->setIdentity();
 		break;
-	case 'c'://cube
-	  printf("shiny-diffuse\n");
-
-		objIdx=4;
-		changeObj();
+	case 'c'://superman/cape
+	  printf("Superman Mode\n");
+	  
+		objIdx=0;
+		camPtr->set(0,-10,-5,  0,0,-5,	 0,0,1		); //camera for facing front OBJ drawings
 		displayCallback();
 		Mobj2world->setIdentity();
 		break;
@@ -284,6 +284,7 @@ void Window::processNormalKeys(unsigned char key,int x,int y)
 	  Mobj2world->setIdentity();
 	  camPtr->reset();
 	  frustum->setCamDef(*(camPtr->e),*(camPtr->d),*(camPtr->up));
+	  cape->reset();
 	  break;
 	case 'f': //do frustum culling
 	  Node::DO_FRUSTUM_CULLING = !Node::DO_FRUSTUM_CULLING;
@@ -383,9 +384,14 @@ void Window::displayCallback(void)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
   
-  if(objIdx>=0 && objIdx<numObjs+2){
-    //drawObj();
-    //drawSceneGraph();
+  if(objIdx==0){
+    Matrix4 M=Matrix4();
+    M.setIdentity();
+    cape->draw(M);
+  }else{
+  
+    //  if(objIdx>=0 && objIdx<numObjs+2){
+
       world->draw((*Mobj2world));
   }
 

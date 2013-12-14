@@ -3,8 +3,8 @@
 
 class SpringDamper{
   //  float k_s=.1, k_d=.1; //spring constant, dampingfactor
-  float k_s=.1, k_d=.1; //spring constant, dampingfactor
-  float l0=1.0;//rest length
+  float k_s, k_d; //spring constant, dampingfactor
+  float l0;//rest length
   
 
  public:

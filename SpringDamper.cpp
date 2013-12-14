@@ -3,6 +3,9 @@
 SpringDamper::SpringDamper(Particle *a1, Particle *a2){
   p1=a1;
   p2=a2;
+
+  k_s = k_d = 0.1;
+  l0=1.0;
 }
 
 SpringDamper::SpringDamper(Particle *a1, Particle *a2,double s,double d, double l){

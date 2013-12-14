@@ -14,11 +14,13 @@ Particle::Particle(Vector3 a_r,Vector3 a_v, float a_m){
   m=a_m;
 }
 
-void Particle::update(float time){
+void Particle::update(float dt){
+  if(!isMovable)return;
+
   Vector3 A= F_sum*(1/m); //acceleration
 
-  v = v + A*time;
-  r = r + v*time;
+  v = v + A * dt;
+  r = r + v * dt;
 
   F_sum.reset();
 }

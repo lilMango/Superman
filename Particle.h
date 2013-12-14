@@ -12,7 +12,8 @@ class Particle{
   Vector3 F_sum;//Froce, reset and re computed per frame
   
   float m;//mass
-  
+  bool isMovable;
+
   Particle(){}
   Particle(Vector3 a_r,Vector3 a_v, float a_m);
 
