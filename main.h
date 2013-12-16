@@ -55,6 +55,8 @@ bool isAdjust=true;
 bool keepDrawing=false; //tell whether to redraw or not
 bool moveObject=true;
 bool isShader=true;
+bool soloMode=false;
+
 int shaderIdx=0;
 Shader* shad;
 Shader* tripShad, *waveShad, *inceptionShad;
@@ -69,6 +71,7 @@ int Node::S_HELLO=0;
 Frustum* Node::FRUSTUM=frustum;
 bool Node::DO_FRUSTUM_CULLING=true;
 bool Node::SHOW_FRUSTUM=false;
+bool Cloth::DEBUG=true;
 MatrixTransform *world = new MatrixTransform();
 
 Fps* fps= new Fps();
@@ -131,13 +134,24 @@ void mouseDrag(int x, int y) {
       //diff>0 scale up 
       //diff/100;//to lower sensitivity 
       if(diff<0){ //zoom out
-
 	camPtr->zoomOut();
+
+	if(soloMode){
+	  scaleFactor-=.1;
+	}
       } 
       else { //zoom in
 	camPtr->zoomIn();
+	
+	if(soloMode){
+	  scaleFactor+=.1;
+	}
       } 
       
+      if(scaleFactor<0)scaleFactor=.1;//.5 is lowest before matrix manipulations prodcut goes to 0\
+      else if(scaleFactor>20)scaleFactor=20;
+
+
               
       prevScaleDrag=y; 
       drawObj(); 

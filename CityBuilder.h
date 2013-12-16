@@ -87,7 +87,7 @@ class CityBuilder:public MatrixTransform{
     density = 75;
     towerFreq = 25;
     maxHeight = 70;
-    streetWidth = 8;
+    streetWidth = 16;
     M=Matrix4(1,0,0,0,
 	      0,1,0,0,
 	      0,0,1,0,

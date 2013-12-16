@@ -10,11 +10,7 @@ void drawObj()
 glMatrixMode(GL_MODELVIEW);
 
  Matrix4 C=camPtr->getCameraMatrix();
- //C=C.transpose();
- //C=C*(*Mobj2world);
- //C=C.transpose();
  C=(*Mobj2world)*C;
- //since we're using column order Matrix stack we use M*C not C*M
  glLoadMatrixd(  C.getPointer());
 
 
@@ -33,6 +29,7 @@ glMatrixMode(GL_MODELVIEW);
    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, low_shininess);
 
  }
+
  if(objIdx==4)//cube
    {
      drawCube();
@@ -208,10 +205,15 @@ void Window::processNormalKeys(unsigned char key,int x,int y)
 		Mobj2world->setIdentity();
 		break;
 	case 'c'://superman/cape
-	  printf("Superman Mode\n");
-	  
-		objIdx=0;
-		camPtr->set(0,-10,-5,  0,0,-5,	 0,0,1		); //camera for facing front OBJ drawings
+ 	        printf("Superman Mode\n");
+		soloMode=!soloMode;
+
+		if(soloMode){
+		  camPtr->set(0,-8,0,  0,0,0,	 0,0,1		); //camera for facing front OBJ drawings
+		}else{
+		  camPtr->reset();
+		  frustum->setCamDef(*(camPtr->e),*(camPtr->d),*(camPtr->up));
+		}
 		displayCallback();
 		Mobj2world->setIdentity();
 		break;
@@ -297,6 +299,7 @@ void Window::processNormalKeys(unsigned char key,int x,int y)
 	  break;
 	case 'g': //show frustum
 	  Node::SHOW_FRUSTUM =! Node::SHOW_FRUSTUM;
+	  Cloth::DEBUG=!Cloth::DEBUG;
 	  break;
 	}//end switch
 
@@ -384,10 +387,13 @@ void Window::displayCallback(void)
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
   
-  if(objIdx==0){
-    Matrix4 M=Matrix4();
-    M.setIdentity();
-    cape->draw(M);
+  if(soloMode){
+    if(scaleFactor<0 || scaleFactor>20)scaleFactor=1;
+    Mobj2world->scale(scaleFactor,scaleFactor,scaleFactor);
+
+    cape->draw((*Mobj2world));
+
+    Mobj2world->scale(1.0/scaleFactor,1.0/scaleFactor,1.0/scaleFactor);
   }else{
   
     //  if(objIdx>=0 && objIdx<numObjs+2){
@@ -470,7 +476,7 @@ int main(int argc, char *argv[])
   inceptionShad=new Shader("inception.vert","inception.frag");
 
   shad=waveShad;
-  shad->bind();
+  //shad->bind();
 
 
   //initialize array of read objects

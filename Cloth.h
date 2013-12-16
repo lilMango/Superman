@@ -13,11 +13,13 @@
 
 
 class Cloth:public Geode{
-  const static int NUM_C_PARTS = 7;
+
+  const static int NUM_C_PARTS = 20;
   Particle parts[NUM_C_PARTS][NUM_C_PARTS];
   std::vector<SpringDamper> springDampers;
-
+  std::vector<AeroTriangle> triangles;
  public:
+  static bool DEBUG;
   Cloth();
   
   void reset();

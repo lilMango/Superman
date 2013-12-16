@@ -4,7 +4,8 @@ SpringDamper::SpringDamper(Particle *a1, Particle *a2){
   p1=a1;
   p2=a2;
 
-  k_s = k_d = 0.1;
+  k_s = 15.0f;
+  k_d = .9f;
   l0=1.0;
 }
 
