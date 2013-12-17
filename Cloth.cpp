@@ -4,7 +4,7 @@ Cloth::Cloth(){
 
   for(int j=0; j<NUM_C_PARTS; j++){
     for(int i=0; i<NUM_C_PARTS; i++){
-      parts[i][j]=Particle(Vector3(i*1.0,0.0, -j), Vector3(),0.5);
+      parts[i][j]=Particle(Vector3(i*1.0, -j, 0.0), Vector3(),0.5);
       if(j==0){
 	parts[i][j].isFixed=true; //pinned to shoulders
 	
@@ -76,7 +76,7 @@ void Cloth::draw(Matrix4 C){
    //apply gravity to all
   for(int j=0; j<NUM_C_PARTS; j++){
     for(int i=0; i<NUM_C_PARTS; i++){
-       parts[i][j].F_sum=Vector3(0, 0, -.98);
+       parts[i][j].F_sum=Vector3(0, -.98, 0);
     }
   }
   
@@ -90,7 +90,7 @@ void Cloth::draw(Matrix4 C){
 
   //apply air force
   for(std::vector<AeroTriangle>::iterator it=triangles.begin(); it!=triangles.end();it++){
-    it->computeForce(Vector3(3,-1,0));
+    it->computeForce(Vector3(3, 0, -1));
   }
   
 
@@ -103,7 +103,7 @@ void Cloth::draw(Matrix4 C){
 
 
   //center
-  glTranslatef(-NUM_C_PARTS/2, -NUM_C_PARTS/2, NUM_C_PARTS/2);
+  glTranslatef(-NUM_C_PARTS/2, NUM_C_PARTS, -NUM_C_PARTS/2);
   //==== Actual DRAWING ====
   if(DEBUG){//DEBUG MODE
     for(int j=0; j<NUM_C_PARTS; j++){

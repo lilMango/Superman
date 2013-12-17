@@ -152,10 +152,10 @@ void SandPlane::draw(Matrix4 C){
     glBegin(GL_TRIANGLE_STRIP);
     //	glBegin(GL_POINTS);glPointSize(1);
     for(float x=-DIM; x<DIM; x+=DELTA){
-      glNormal3f(0,1,0);      
+      glNormal3f(0,0,1);      
       // glVertex2f(x,y);
-	      glVertex3f(x,y,0);
-	   glVertex3f(x,y+DELTA,0);
+      glVertex3f(x, 0.1, y);
+      glVertex3f(x, 0.1, y);
     }
     glEnd();
   }//end forx

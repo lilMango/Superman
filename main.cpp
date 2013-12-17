@@ -209,7 +209,7 @@ void Window::processNormalKeys(unsigned char key,int x,int y)
 		soloMode=!soloMode;
 
 		if(soloMode){
-		  camPtr->set(0,-8,0,  0,0,0,	 0,0,1		); //camera for facing front OBJ drawings
+		  camPtr->set(0,0,7,  0,0,0,	 0,1,0		); //camera for facing front OBJ drawings
 		}else{
 		  camPtr->reset();
 		  frustum->setCamDef(*(camPtr->e),*(camPtr->d),*(camPtr->up));

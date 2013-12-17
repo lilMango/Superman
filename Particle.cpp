@@ -12,10 +12,11 @@ Particle::Particle(Vector3 a_r,Vector3 a_v, float a_m){
   r=a_r;
   v=a_v;
   m=a_m;
+  isFixed=false;
 }
 
 void Particle::update(float dt){
-  if(!isMovable)return;
+  if(isFixed)return;
 
   Vector3 A= F_sum*(1/m); //acceleration
 

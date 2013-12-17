@@ -39,8 +39,8 @@ int pgmWidth,pgmHeight;
 Building *oneBuilding=new Building(0,10,10,10);
 
 //static Camera* camPtr=new Camera(-15,5,10,  -5,0,0,		 0,1,0.5		); //left corner top
-//static Camera* camPtr=new Camera(0,10,3,  0,10,2,	 0,1,0		); //camera for facing front OBJ drawings
-static Camera* camPtr=new Camera(0,-1,7,  0,0,7,	 0,0,1		); //camera for facing front OBJ drawings
+static Camera* camPtr=new Camera(0,7,1,  0,7,0,	 0,1,0		); //camera for facing front OBJ drawings
+//static Camera* camPtr=new Camera(0,-1,7,  0,0,7,	 0,0,1		); //camera for facing front OBJ drawings
 Matrix4* Mobj2world=new Matrix4();
 bool isDragging=false;
 int prevXpix=0,prevYpix=0;

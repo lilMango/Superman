@@ -25,9 +25,9 @@ void Building::draw(Matrix4 C){
   for(int z=0; z<height-deltaZ; z+=deltaZ){
     glBegin(GL_TRIANGLE_STRIP);
     for(int x=-width/2; x<=width/2; x+=deltaX){
-      glNormal3f(0,-1,0);
-      glVertex3f(x,-length/2,z);
-      glVertex3f(x,-length/2,z+deltaZ);
+      glNormal3f(0,0,-1);
+      glVertex3f(x, z, length/2);
+      glVertex3f(x, z+deltaZ, length/2);
     }
     glEnd();
   }
@@ -38,19 +38,19 @@ void Building::draw(Matrix4 C){
     glBegin(GL_TRIANGLE_STRIP);
     for(int y=-length/2; y<=length/2; y+=deltaY){
       glNormal3f(1,0,0);
-	glVertex3f(width/2,y,z);
-	glVertex3f(width/2,y,z+deltaZ);
+	glVertex3f(width/2,z,y);
+	glVertex3f(width/2,z+deltaZ,y);
     }
     glEnd();
   }
   
-    //back face
+  //back face
   for(int z=0; z<height-deltaZ; z+=deltaZ){
     glBegin(GL_TRIANGLE_STRIP);
     for(int x=0; x<=width; x+=deltaX){
-      glNormal3f(0,1,0);
-      glVertex3f(width/2-x,length/2,z);
-      glVertex3f(width/2-x,length/2,z+deltaZ);
+      glNormal3f(0,0,-1);
+      glVertex3f(width/2-x, z, -length/2);
+      glVertex3f(width/2-x, z+deltaZ, -length/2);
       }
     glEnd();
   }
@@ -60,8 +60,8 @@ void Building::draw(Matrix4 C){
       glBegin(GL_TRIANGLE_STRIP);
       for(int y=length/2; y>=-length/2; y-=deltaY){
 	glNormal3f(-1,0,0);
-	glVertex3f(-width/2,y,z);
-	glVertex3f(-width/2,y,z+deltaZ);
+	glVertex3f(-width/2, z, y);
+	glVertex3f(-width/2, z+deltaZ, y);
       }
       glEnd();
   }
@@ -197,8 +197,8 @@ void Capitol::draw(Matrix4 C){
       glBegin(GL_TRIANGLE_STRIP);
       for(int dy=y+16; dy>=y; dy-=deltaY){
 	glNormal3f(-1,0,0);
-	glVertex3f(-width/2,dy,z);
-	glVertex3f(-width/2,dy,z+deltaZ);
+	glVertex3f(-width/2, z, dy);
+	glVertex3f(-width/2, z+deltaZ, dy);
       }
       glEnd();
   }
@@ -235,23 +235,23 @@ void CityBuilder::build(){
   for(int i=-dim/2,ic=0; i<dim/2; i+=gridSize,ic++){
     for(int j=-dim/2, jc=0; j<dim/2; j+=gridSize,jc++){
       M = Matrix4(1,0,0,i,
-		  0,1,0,j,
-		  0,0,1,0,
+		  0,1,0,0,
+		  0,0,1,j,
 		  0,0,0,1);
 
       gridPos[ic][jc]= new MatrixTransform(M);
 
       M.set(1.0, 0.0, 0.0, (float)(gridSize-streetWidth),
-	    0.0, 1.0, 0.0, (float)(gridSize>>1),
-	    0.0, 0.0, 1.0, 0.0,
+	    0.0, 1.0, 0.0, 0.0,
+	    0.0, 0.0, 1.0, (float)(gridSize>>1),
 	    0.0, 0.0, 0.0, 1.0);
       
       //from bottom left corner of grid
       MatrixTransform* posV=new MatrixTransform(M);
 
       M.set(1.0, 0.0, 0.0, (float)(gridSize>>1),
-	    0.0, 1.0, 0.0, (float)(gridSize-streetWidth),
-	    0.0, 0.0, 1.0, 0.0,
+	    0.0, 1.0, 0.0, 0.0,
+	    0.0, 0.0, 1.0, (float)(gridSize-streetWidth),
 	    0.0, 0.0, 0.0, 1.0);
       
       MatrixTransform* posH=new MatrixTransform(M);
@@ -276,8 +276,8 @@ void CityBuilder::build(){
       if(ic==4 && (jc==4||jc==5)){
 	if(jc==4){
 	  M.set(1,0,0,gridSize>>1,
-		0,1,0,gridSize,
-		0,0,1,0,
+		0,1,0,0,
+		0,0,1,gridSize,
 		0,0,0,1);
 	  MatrixTransform* pos = new MatrixTransform();
 	  pos->set(M);
@@ -301,8 +301,8 @@ void CityBuilder::build(){
 	for(int x=0;x<gridSize-8;){
 
 	  M.set(1,0,0,x,
-		0,1,0,y,
-		0,0,1,0,
+		0,1,0,0,
+		0,0,1,y,
 		0,0,0,1);
 	  MatrixTransform* pos = new MatrixTransform();
 	  pos->set(M);
@@ -344,9 +344,9 @@ void Road::draw(Matrix4 C){
   for(int j=-length/2; j<=length/2; j+=deltaY){
     glBegin(GL_TRIANGLE_STRIP);
     for(int i=-width/2; i<=width/2; i+=deltaX){
-      glNormal3f(0,0,1);
-      glVertex3f(i,j,0);
-      glVertex3f(i,j+deltaY,0);
+      glNormal3f(0,1,0);
+      glVertex3f(i,0,j);
+      glVertex3f(i,0,j+deltaY);
     }
     glEnd();
   }
