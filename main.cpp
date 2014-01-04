@@ -330,7 +330,7 @@ void Window::idleCallback(void)
   float diff= difftime(timet,startTime); 
     // glUniform1fARB(myTime,diff*.0025);
   glUniform1fARB(myTime,mytimer);
-
+  
   //http://stackoverflow.com/questions/8866904/need-help-understanding-the-differences-and-relationship-between-glactivetexture
   glActiveTexture(GL_TEXTURE0);
   // glBindTexture(GL_TEXTURE_2D, textures[0]);
@@ -397,8 +397,20 @@ void Window::displayCallback(void)
   }else{
   
     //  if(objIdx>=0 && objIdx<numObjs+2){
+    if(isShader){
+      shad->unbind();
+    }
+    
+    skyboxShad->bind();    
+    drawSkybox();
+    skyboxShad->unbind();
+    //boxMesh->draw((*Mobj2world));
+    
+    if(isShader){
+      shad->bind();
+    }
 
-      world->draw((*Mobj2world));
+    world->draw((*Mobj2world));
   }
 
   
@@ -474,6 +486,7 @@ int main(int argc, char *argv[])
   waveShad=new Shader("waves.vert","waves.frag");
   tripShad=new Shader("tripper.vert","tripper.frag");
   inceptionShad=new Shader("inception.vert","inception.frag");
+  skyboxShad=new Shader("skybox.vert","skybox.frag");
 
   shad=waveShad;
   //shad->bind();
@@ -488,7 +501,6 @@ int main(int argc, char *argv[])
   loadTexture();
 
   //
-  printf("SHOWING MAP!!\n");
 
   for(MAPOBJ_ITER iter= ObjMap.begin(); iter!=ObjMap.end();iter++){
     string tmp= iter->first;
@@ -499,7 +511,8 @@ int main(int argc, char *argv[])
 
   buildSceneGraph();
   frustum->setCamDef(*(camPtr->e),*(camPtr->d),*(camPtr->up));
-  //  world->FRUSTUM = frustum;
+
+  initSkybox();
 
   glutMainLoop();
 

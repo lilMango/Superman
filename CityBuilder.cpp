@@ -212,6 +212,16 @@ void Capitol::draw(Matrix4 C){
 }
 
 void CityBuilder::draw(Matrix4 C){
+  setModelView(C);
+  //create asphalt
+  glColor3f(.1,.1,.1);
+  glBegin(GL_TRIANGLE_STRIP);
+  glVertex3f(-dim/2, -0.1, -dim/2);
+  glVertex3f(-dim/2, -0.1, dim/2);
+  glVertex3f(dim/2, -0.1, -dim/2);
+  glVertex3f(dim/2, -0.1, dim/2);
+  glEnd();
+
   Matrix4 C_new=C;
   Matrix4 tmp=M;
   tmp=tmp.transpose();
@@ -230,6 +240,7 @@ void CityBuilder::build(){
   MatrixTransform *gridPos[8][8];
   Matrix4 M;
   //TODO make separate for loop for initializing gridPos
+  
 
   //create road
   for(int i=-dim/2,ic=0; i<dim/2; i+=gridSize,ic++){
@@ -329,6 +340,8 @@ void Road::draw(Matrix4 C){
   
   glPushMatrix();
   setModelView(C);
+
+
   glColor3f(0,1,0);
   
   int intersect = -1;

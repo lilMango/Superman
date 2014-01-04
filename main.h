@@ -17,6 +17,7 @@
 #include "SpringDamper.h"
 #include "AeroTriangle.h"
 #include "Cloth.h"
+#include "Mesh3D.h"
 
 void mouseClick(int,int,int,int);
 void mouseDrag(int,int);
@@ -30,7 +31,8 @@ void drawObj();
 void buildSceneGraph();
 unsigned char* loadPPM(const char* filename, int& width, int& height);
 void loadTexture();
-
+void drawSkybox();
+void initSkybox();
 using namespace std;
 
 
@@ -38,7 +40,7 @@ int pgmWidth,pgmHeight;
 
 Building *oneBuilding=new Building(0,10,10,10);
 
-//static Camera* camPtr=new Camera(-15,5,10,  -5,0,0,		 0,1,0.5		); //left corner top
+//static Camera* camPtr=new Camera(0,0,1,  0,0,0,		 0,1,0		); //left corner top
 static Camera* camPtr=new Camera(0,7,1,  0,7,0,	 0,1,0		); //camera for facing front OBJ drawings
 //static Camera* camPtr=new Camera(0,-1,7,  0,0,7,	 0,0,1		); //camera for facing front OBJ drawings
 Matrix4* Mobj2world=new Matrix4();
@@ -59,8 +61,8 @@ bool soloMode=false;
 
 int shaderIdx=0;
 Shader* shad;
-Shader* tripShad, *waveShad, *inceptionShad;
-
+Shader* tripShad, *waveShad, *inceptionShad, *skyboxShad;
+Mesh3D* boxMesh=new Mesh3D(1);//vao=1
 Light *pointLight = new Light(0, 10, 20,0,
 			      1,1,1,1);
 
@@ -364,3 +366,131 @@ void loadTexture(){
       
   glEnable(GL_TEXTURE_2D);
 }//end loadTexture
+
+
+
+void drawSkybox(){
+  const float SB=10.0f;//has to be >10
+  
+  glPushMatrix();
+  
+  glColor3f(1,1,1);
+  glDepthMask(GL_FALSE);
+  glDisable(GL_LIGHTING);
+
+  //left CCW
+  glBegin(GL_TRIANGLE_STRIP);
+  glVertex3f(-SB,SB,SB);
+  glVertex3f(-SB,-SB,SB);
+  glVertex3f(-SB,SB,-SB);
+  glVertex3f(-SB,-SB,-SB);
+  glEnd();
+
+  //front
+  glBegin(GL_TRIANGLE_STRIP);
+  glVertex3f(-SB,SB,-SB);
+  glVertex3f(-SB,-SB,-SB);
+  glVertex3f(SB,SB,-SB);
+  glVertex3f(SB,-SB,-SB);
+  glEnd();
+  
+  glEnable(GL_LIGHTING);
+  glDepthMask(GL_TRUE);
+  glPopMatrix();
+}
+
+#define FRONT "negz.jpg"
+#define BACK "posz.jpg"
+#define TOP "posy.jpg"
+#define BOTTOM "negy.jpg"
+#define LEFT "negx.jpg"
+#define RIGHT "posx.jpg"
+GLuint tex_cube;
+unsigned int vbo=0, vao=0;
+unsigned int loc_vp_att=0;
+
+void initSkybox(){
+  float points[] = {
+    -3.0f,  3.0f, -3.0f,
+    -3.0f, -3.0f, -3.0f,
+    3.0f, -3.0f, -3.0f,
+    3.0f, -3.0f, -3.0f,
+    3.0f,  3.0f, -3.0f,
+    -3.0f,  3.0f, -3.0f,
+  
+    -3.0f, -3.0f,  3.0f,
+    -3.0f, -3.0f, -3.0f,
+    -3.0f,  3.0f, -3.0f,
+    -3.0f,  3.0f, -3.0f,
+    -3.0f,  3.0f,  3.0f,
+    -3.0f, -3.0f,  3.0f,
+  
+    3.0f, -3.0f, -3.0f,
+    3.0f, -3.0f,  3.0f,
+    3.0f,  3.0f,  3.0f,
+    3.0f,  3.0f,  3.0f,
+    3.0f,  3.0f, -3.0f,
+    3.0f, -3.0f, -3.0f,
+   
+    -3.0f, -3.0f,  3.0f,
+    -3.0f,  3.0f,  3.0f,
+    3.0f,  3.0f,  3.0f,
+    3.0f,  3.0f,  3.0f,
+    3.0f, -3.0f,  3.0f,
+    -3.0f, -3.0f,  3.0f,
+  
+    -3.0f,  3.0f, -3.0f,
+    3.0f,  3.0f, -3.0f,
+    3.0f,  3.0f,  3.0f,
+    3.0f,  3.0f,  3.0f,
+    -3.0f,  3.0f,  3.0f,
+    -3.0f,  3.0f, -3.0f,
+  
+    -3.0f, -3.0f, -3.0f,
+    -3.0f, -3.0f,  3.0f,
+    3.0f, -3.0f, -3.0f,
+    3.0f, -3.0f, -3.0f,
+    -3.0f, -3.0f,  3.0f,
+    3.0f, -3.0f,  3.0f
+  };
+  //unsigned int vbo = 0;
+  glGenBuffers (1, &vbo);
+  glBindBuffer (GL_ARRAY_BUFFER, vbo);
+  glBufferData (GL_ARRAY_BUFFER, 3 * 36 * sizeof (float), &points[0], GL_STATIC_DRAW);
+
+  //unsigned int vao = 0;
+  glGenVertexArraysAPPLE (1, &vao);
+  glBindVertexArrayAPPLE (vao);
+  glEnableVertexAttribArray (loc_vp_att);
+  glBindBuffer (GL_ARRAY_BUFFER, vbo);
+  glVertexAttribPointer (loc_vp_att, 3, GL_FLOAT, GL_FALSE, 0, (GLubyte*)NULL);//param 0=0 means vertex positions
+  //param 0 == 1 could mean color, texcoord, normals, etc
+
+  printf(" @@@@@@@@@@ vbo: %u\n",vbo);
+  printf(" @@@@@@@@@@ vao: %u\n",vao);
+
+
+
+
+  ///////////
+
+  tex_cube = SOIL_load_OGL_cubemap (
+					   RIGHT,
+					   LEFT,
+					   TOP,
+					   BOTTOM,
+					   BACK,
+					   FRONT,
+					   SOIL_LOAD_RGB,
+					   SOIL_CREATE_NEW_ID,
+					   0
+					   );
+  glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+  glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri (GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  if (0 == tex_cube) {
+    printf("SOIL loading error: '%s'\n", SOIL_last_result());
+  }  
+}//end initSkybox

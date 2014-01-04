@@ -10,8 +10,8 @@ Cloth::Cloth(){
 	
       }
 
-      printf("cloth [%d][%d]:\t",i,j);
-      parts[i][j].r.print();
+      //      printf("cloth [%d][%d]:\t",i,j);
+      // parts[i][j].r.print();
     }
   }
 
