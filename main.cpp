@@ -68,13 +68,12 @@ void buildSceneGraph()
   world->addChild(subRoot);
 
   Sphere* sphere=new Sphere(1.0);
-  //  Cube* cube=new Cube(3);
+  
   Cape* cape=new Cape(6,2,9);
   MatrixTransform*pos0=new MatrixTransform(5,0,0,0,
 					   0,5,0,0,
 					   0,0,5,0,
 					   0,0,0,1);
-  //  world->addChild(pos0);
   pos0->addChild(cape);
 
   MatrixTransform*pos1=new MatrixTransform(10,0,0,0,
@@ -87,9 +86,6 @@ void buildSceneGraph()
  
   Model3D* teapot=new Model3D(ObjMap["teapot.obj"]);
   Road* road = new Road();
-  //pos1->addChild(skyscraper);
-  //   pos1->addChild(teapot);
-  //  world->addChild(road);
 
   FrustumShape* frustumShape=new FrustumShape();
   world->addChild(frustumShape);
@@ -396,16 +392,34 @@ void Window::displayCallback(void)
     Mobj2world->scale(1.0/scaleFactor,1.0/scaleFactor,1.0/scaleFactor);
   }else{
   
-    //  if(objIdx>=0 && objIdx<numObjs+2){
-    if(isShader){
-      shad->unbind();
-    }
-    
+        
     skyboxShad->bind();    
     drawSkybox();
     skyboxShad->unbind();
-    //boxMesh->draw((*Mobj2world));
+        
+    envMapShad->bind();
+    GLint view_unif_id = glGetUniformLocationARB(shad->getPid(), "V");
+    Matrix4 camMat = camPtr->getCameraMatrix().inverseM();
+    float camMatFloat[16];
+    for(int i=0;i<4; i++){
+      for(int j=0;j<4;j++){
+	camMatFloat[i*4+j]=camMat.M[i][j];
+      }
+    }
+    glUniformMatrix4fvARB(view_unif_id, 1, 0, camMatFloat);
     
+    glPushMatrix();
+    Matrix4 C=*Mobj2world;
+    Matrix4 M=Matrix4(1,0,0,30,
+		      0,1,0,50,
+		      0,0,1,30,
+		      0,0,0,1);
+    M= (M.transpose())*C;
+    setModelView(M);
+    glutSolidSphere(30.0,30,30);
+    glPopMatrix();
+    envMapShad->unbind();
+        
     if(isShader){
       shad->bind();
     }
@@ -487,6 +501,7 @@ int main(int argc, char *argv[])
   tripShad=new Shader("tripper.vert","tripper.frag");
   inceptionShad=new Shader("inception.vert","inception.frag");
   skyboxShad=new Shader("skybox.vert","skybox.frag");
+  envMapShad=new Shader("env_map.vert", "env_map.frag");
 
   shad=waveShad;
   //shad->bind();

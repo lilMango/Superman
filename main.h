@@ -40,7 +40,7 @@ int pgmWidth,pgmHeight;
 
 Building *oneBuilding=new Building(0,10,10,10);
 
-//static Camera* camPtr=new Camera(0,0,1,  0,0,0,		 0,1,0		); //left corner top
+//static Camera* camPtr=new Camera(0,10,10,  0,0,0,		 0,1,0		); //left corner top
 static Camera* camPtr=new Camera(0,7,1,  0,7,0,	 0,1,0		); //camera for facing front OBJ drawings
 //static Camera* camPtr=new Camera(0,-1,7,  0,0,7,	 0,0,1		); //camera for facing front OBJ drawings
 Matrix4* Mobj2world=new Matrix4();
@@ -61,7 +61,7 @@ bool soloMode=false;
 
 int shaderIdx=0;
 Shader* shad;
-Shader* tripShad, *waveShad, *inceptionShad, *skyboxShad;
+Shader* tripShad, *waveShad, *inceptionShad, *skyboxShad, *envMapShad;
 Mesh3D* boxMesh=new Mesh3D(1);//vao=1
 Light *pointLight = new Light(0, 10, 20,0,
 			      1,1,1,1);

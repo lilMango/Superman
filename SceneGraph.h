@@ -147,8 +147,8 @@ class Cube:public Geode{
 		Cube(char*n,int h){
 			name=n;height=h;;
 		}
-		Cube(int h,int w,int depth){
-			height=h;width=w;
+		Cube(int h,int w,int d){
+		  height=h;width=w;depth=d;
 		}
 		Cube(int h){
 			height=h;width=h;

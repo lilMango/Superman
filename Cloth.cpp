@@ -35,7 +35,7 @@ Cloth::Cloth(){
     }
   }
   
-  printf("springDampers size:%d\n", springDampers.size());
+  printf("springDampers size:%lu\n", springDampers.size());
 
   //apply aerotriangles
   for(int j=1; j<NUM_C_PARTS; j++){

@@ -33,7 +33,6 @@ void Sphere::draw(Matrix4 C){
   //glutSolidSphere(Sphere::radius,12,12);
 }
 
-
 void MatrixTransform::draw(Matrix4 C){
   Matrix4 C_new=C;
   Matrix4 tmp=M;
